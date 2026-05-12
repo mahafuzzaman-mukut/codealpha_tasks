@@ -27,7 +27,7 @@ public static void main(String[] args) {
             students.add(new Student(name, marks));
         }
 
-        int sum = 0, max = students.get(0).marks, min = students.get(0).marks;
+      int sum = 0, max = students.get(0).marks, min = students.get(0).marks;
 
         for (Student s : students) {
             sum += s.marks;
