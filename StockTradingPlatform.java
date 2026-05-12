@@ -30,7 +30,8 @@ public Transaction(String type, String symbol, int quantity, double price){
     this.quantity=quantity; 
     this.price=price;
     } 
- @Override 
+ @Override
+    
 public String toString() {
     return type + "." + symbol + ". Quantity: " + quantity + ". Price: " +price;
     }
