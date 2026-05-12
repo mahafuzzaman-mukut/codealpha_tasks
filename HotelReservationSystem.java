@@ -24,6 +24,7 @@ public class Main {
         }
         return null;
     }
+    
   static void viewRooms(ArrayList<Room> rooms) {
         System.out.println(" ROOM LIST: ");
         for (Room room : rooms) {
