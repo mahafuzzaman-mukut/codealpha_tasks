@@ -1,148 +1,156 @@
 import java.util.*;
 
 class Stock {
-    private String symbol;
-    private double price;
-Stock(String symbol, double price) {
+    String symbol;
+    double price;
+
+    Stock(String symbol, double price) {
         this.symbol = symbol;
         this.price = price;
     }
-public String getSymbol() {
-        return symbol;
-    } 
-public double getPrice() {
+
+    double getPrice() {
         return price;
     }
-public void setPrice(double price){
-        this.price = price;
-    }
-} 
-
-class Transaction {
-    private String type;
-    private String symbol;
-    private int quantity;
-    private double price;
-
-public Transaction(String type, String symbol, int quantity, double price){
-    this.type=type; 
-    this.symbol=symbol; 
-    this.quantity=quantity; 
-    this.price=price;
-    } 
- @Override
-    
-public String toString() {
-    return type + "." + symbol + ". Quantity: " + quantity + ". Price: " +price;
-    }
-} 
+}
 
 class Portfolio {
-    private HashMap <String, Integer> holdings;
-    public Portfolio() {
-        holdings = new HashMap<>();
+    HashMap<String, Integer> holdings = new HashMap<>();
+
+    void addStock(String symbol, int quantity) {
+        holdings.put(symbol,
+                holdings.getOrDefault(symbol, 0) + quantity);
     }
-public void addStock(String symbol, int quantity) {
-    holdings.put(symbol,
-        holdings.getOrDefault(symbol,0)+quantity); 
-} 
-public void removeStock(String symbol, int quantity) {
 
-    int current = holdings.getOrDefault(symbol, 0);
-    if (current <= quantity) {
-    holdings.remove(symbol);
-} 
-else {
-    holdings.put(symbol, current - quantity);
-}
-} 
-public HashMap <String, Integer> getHoldings() {
-    return holdings;
-} 
-public void displayPortfolio(HashMap<String, Stock> market) {
-    System.out.println(" PORTFOLIO: ");
-    double total = 0; 
+    void removeStock(String symbol, int quantity) {
+        int current = holdings.getOrDefault(symbol, 0);
 
-    for (String symbol: holdings.keySet()) {
-        int quantity = holdings.get(symbol);
-
-Stock stock = market.get(symbol);
-if (stock == null) {
-    System.out.println(symbol + " | Data not available");
-    continue;
-}
-double stockPrice = stock.getPrice();
-        double value = quantity * stockPrice;
-        total += value;
-
-    System.out.println(symbol + " | Shares: " + quantity + 
-              " | Current Price: " + stockPrice + " | Value: " + value);
-}
- System.out.println("Total Portfolio Value: " +total);
+        if (current <= quantity) {
+            holdings.remove(symbol);
+        } else {
+            holdings.put(symbol, current - quantity);
+        }
     }
-} 
+
+    void display(HashMap<String, Stock> market) {
+
+        double total = 0;
+
+        System.out.println("PORTFOLIO:");
+
+        for (String symbol : holdings.keySet()) {
+
+            int qty = holdings.get(symbol);
+
+            double price = market.get(symbol).getPrice();
+
+            double value = qty * price;
+
+            total += value;
+
+            System.out.println(
+                    symbol +
+                    " Shares: " + qty +
+                    " Price: " + price +
+                    " Value: " + value
+            );
+        }
+
+        System.out.println("Total Value: " + total);
+    }
+}
+
 class User {
-    private double balance;
-    private Portfolio portfolio;
 
-public User(String name, double balance) {
+    double balance;
+
+    Portfolio portfolio = new Portfolio();
+
+    User(double balance) {
         this.balance = balance;
-        this.portfolio = new Portfolio();
     }
-public void buyStock(String symbol, int quantity, HashMap<String, Stock> market) {
-    if (!market.containsKey(symbol)) {
-        System.out.println("Stock not found.");
-        return;
+
+    void buyStock(String symbol,
+                  int quantity,
+                  HashMap<String, Stock> market) {
+
+        if (!market.containsKey(symbol)) {
+            System.out.println("Stock not found");
+            return;
         }
-    double price = market.get(symbol).getPrice();
-    double cost = price * quantity;
 
-    if (balance >= cost) {
-        balance -= cost;
-        portfolio.addStock(symbol, quantity);
-        System.out.println("Bought " + quantity + " shares of " + symbol);
-    } 
-    else {
-        System.out.println("Insufficient balance.");
+        double cost =
+                market.get(symbol).getPrice() * quantity;
+
+        if (balance >= cost) {
+
+            balance -= cost;
+
+            portfolio.addStock(symbol, quantity);
+
+            System.out.println(
+                    "Bought " + quantity +
+                    " shares of " + symbol
+            );
+
+        } else {
+
+            System.out.println("Insufficient balance");
         }
     }
-public void sellStock(String symbol, int quantity, HashMap<String, Stock> market) {
 
-    if (!market.containsKey(symbol)) {
-        System.out.println("Stock not found.");
-        return;
+    void sellStock(String symbol,
+                   int quantity,
+                   HashMap<String, Stock> market) {
+
+        int owned =
+                portfolio.holdings.getOrDefault(symbol, 0);
+
+        if (owned >= quantity) {
+
+            double money =
+                    market.get(symbol).getPrice() * quantity;
+
+            balance += money;
+
+            portfolio.removeStock(symbol, quantity);
+
+            System.out.println(
+                    "Sold " + quantity +
+                    " shares of " + symbol
+            );
+
+        } else {
+
+            System.out.println("Not enough shares");
+        }
     }
-int owned = portfolio.getHoldings().getOrDefault(symbol, 0);
 
-    if (owned >= quantity) {
-        double price = market.get(symbol).getPrice();
-        balance += price * quantity;
-        portfolio.removeStock(symbol, quantity);
+    void showPortfolio(HashMap<String, Stock> market) {
 
-        System.out.println("Sold " + quantity + " shares of " + symbol);
-    } 
-    else {
-        System.out.println("Not enough shares to sell.");
+        portfolio.display(market);
+
+        System.out.println("Balance: " + balance);
     }
 }
-public void showPortfolio(HashMap<String, Stock> market) {
-    portfolio.displayPortfolio(market);
 
-    System.out.println("Balance: " + balance);
-    }
-}
-public class StockTradingPlatform {
+public class Main {
+
     public static void main(String[] args) {
 
-    HashMap<String, Stock> market = new HashMap<>();
-    market.put("AAPL", new Stock("AAPL", 150));
-    market.put("GOOG", new Stock("GOOG", 2800));
+        HashMap<String, Stock> market =
+                new HashMap<>();
 
-    User user = new User("Alice", 10000);
+        market.put("AAPL", new Stock("AAPL", 150));
 
-    user.buyStock("AAPL", 10, market);
-    user.sellStock("AAPL", 5, market);
+        market.put("GOOG", new Stock("GOOG", 2800));
 
-    user.showPortfolio(market);
+        User user = new User(10000);
+
+        user.buyStock("AAPL", 10, market);
+
+        user.sellStock("AAPL", 5, market);
+
+        user.showPortfolio(market);
     }
 }
