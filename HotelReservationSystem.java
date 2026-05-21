@@ -25,7 +25,7 @@ public class Main {
         return null;
     }
     
-  static void viewRooms(ArrayList<Room> rooms) {
+static void viewRooms(ArrayList<Room> rooms) {
         System.out.println(" ROOM LIST: ");
         for (Room room : rooms) {
             String status = room.available ? "Available" : "Booked";
@@ -37,7 +37,7 @@ public class Main {
             );
         }
     }
-    static void bookRoom(ArrayList<Room> rooms, Scanner sc) {
+ static void bookRoom(ArrayList<Room> rooms, Scanner sc) {
         System.out.print("Enter Room Number: ");
         if (!sc.hasNextInt()) {
             System.out.println("Invalid input!");
@@ -63,7 +63,7 @@ public class Main {
             System.out.println("Room Booked Successfully!");
         }
     }
-    static void cancelRoom(ArrayList<Room> rooms, Scanner sc) {
+ static void cancelRoom(ArrayList<Room> rooms, Scanner sc) {
         System.out.print("Enter Room Number: ");
         if (!sc.hasNextInt()) {
             System.out.println("Invalid input!");
