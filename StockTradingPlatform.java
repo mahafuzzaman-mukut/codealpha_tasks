@@ -56,11 +56,10 @@ class Portfolio {
             );
         }
 
-        System.out.println("Total Value: " + total);
+    System.out.println("Total Value: " + total);
     }
 }
-
-class User {
+  class User {
 
     double balance;
 
