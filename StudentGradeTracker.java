@@ -5,12 +5,12 @@ public class GradeTracker {
         String name;
         int marks;
 
-        Student(String name, int marks) {
+   Student(String name, int marks) {
             this.name = name;
             this.marks = marks;
         }
     }
-public static void main(String[] args) {
+  public static void main(String[] args) {
         Scanner st = new Scanner(System.in);
         ArrayList<Student> students = new ArrayList<>();
 
